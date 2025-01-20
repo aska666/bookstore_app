@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block page_title %}
+    発注画面
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="login-form">
+        <div class="form-group">
+            <input type="text" id="book-name" class="form-control" placeholder="書籍名" autocomplete="off">
+            <ul id="book-list" class="book-list"></ul>
+        </div>
+        <div class="form-group">
+            <input type="text" id="isbn" class="form-control" placeholder="ISBN" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <input type="text" id="publisher" class="form-control" placeholder="出版社" disabled>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>倉庫/店舗</th>
+                    <th>配送日数</th>
+                    <th>選択</th>
+                </tr>
+            </thead>
+            <tbody id="warehouse-days"></tbody>
+        </table>
+        <div class="form-group" style="margin-top: 1rem;">
+            <button class="btn" id="confirm-btn">確定</button>
+            <button class="btn btn-secondary back-btn" onclick="location.href='{{ url_for('main.home') }}'">戻る</button>
+        </div>
+    </div>
+</div>
+{% endblock %}

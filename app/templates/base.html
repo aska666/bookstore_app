@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>書店管理システム</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.28.0/feather.min.js"></script>
+    <link rel="stylesheet" href="static/css/styles.css">
+</head>
+
+<body class="bg-gray-100">
+    {% if session.get('logged_in') %}
+    <div id="sidebar" class="sidebar fixed top-0 left-0 h-full w-64 bg-white shadow-lg closed">
+        <div class="flex items-center justify-between p-4 border-b">
+            <h1 class="text-xl font-bold">在庫管理システム</h1>
+            <button onclick="toggleSidebar()" class="p-2">
+                <i data-feather="x"></i>
+            </button>
+        </div>
+
+        <nav class="mt-4">
+            <a href="{{ url_for('main.order_form') }}" class="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100">
+                <i data-feather="shopping-cart"></i>
+                <span class="ml-3">発注画面</span>
+            </a>
+            <a href="{{ url_for('main.order_progress') }}" class="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100">
+                <i data-feather="check-circle"></i> 
+                <span class="ml-3">発注進捗</span>
+            </a>
+            <a href="{{ url_for('main.order_requests') }}" class="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100">
+                <i data-feather="list"></i>
+                <span class="ml-3">引当依頼一覧</span>
+            </a>
+        </nav>
+    </div>
+    {% endif %}
+
+    <div id="main-content" class="main-content">
+        <header class="bg-white shadow-sm">
+            <div class="flex items-center h-16 px-4">
+                <button onclick="toggleSidebar()" class="p-2 hover:bg-gray-100 rounded-lg">
+                    <i data-feather="menu"></i>
+                </button>
+            </div>
+        </header>
+
+        <div class="bg-gray-200 py-2 px-4 shadow-sm">
+            <h2 class="text-lg font-semibold text-gray-700 ml-7">
+                {% block page_title %}{% endblock %}
+            </h2>
+        </div>
+
+        <main class="p-6">
+            <div class="bg-white rounded-lg shadow p-6">
+                {% block content %}{% endblock %}
+            </div>
+        </main>
+    </div>
+
+    <script src="static/js/scripts.js"></script>
+</body>
+</html>
