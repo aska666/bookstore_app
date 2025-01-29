@@ -1,5 +1,19 @@
-from flask import Blueprint, render_template, redirect, url_for, session, request
-from .models import PurchaseDetail, Store, Book, Purchase, OrderDetail, Order
+from flask import (
+    Blueprint,
+    render_template,
+    redirect,
+    url_for,
+    session,
+    request,
+)
+from .models import (
+    PurchaseDetail,
+    Store,
+    Book,
+    Purchase,
+    OrderDetail,
+    Order,
+)
 from .database import db
 from sqlalchemy.orm import joinedload
 
@@ -17,6 +31,12 @@ def login():
     return redirect(url_for("main.home"))
 
 
+@main.route("/logout", methods=["GET"])
+def logout():
+    session["logged_in"] = False
+    return redirect(url_for("main.index"))
+
+
 @main.route("/home")
 def home():
     return render_template("home.html")
@@ -24,7 +44,7 @@ def home():
 
 @main.route("/order-form")
 def order_form():
-    pass
+    return render_template("order_form.html")
 
 
 @main.route("/order-progress", methods=["POST", "GET"])
@@ -76,3 +96,8 @@ def order_requests():
         pagination=query,
         per_page=per_page,
     )
+
+
+@main.route("/rental", methods=["POST", "GET"])
+def rental():
+    return render_template("rental.html")
