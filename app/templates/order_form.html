@@ -1,49 +1,63 @@
 {% extends 'base.html' %}
 
 {% block page_title %}
-    発注画面
+    発注進捗
 {% endblock %}
 
 {% block content %}
 <div class="flex justify-center items-center">
     <div class="bg-white w-full rounded-lg shadow p-6 mb-6">
-        <div class="container mx-auto">
-            <div class="flex justify-center mb-6">
-                <div class="w-full max-w-md">
-                    <form method="post">
-                        <div class="mb-4">
-                            <label for="book-name" class="block text-gray-700 text-sm font-bold mb-2">書籍名:</label>
-                            <input type="text" id="book-name" name="book_name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="書籍名を入力" autocomplete="off">
-                            <ul id="book-list" class="book-list mt-2 absolute w-full px-3 bg-white shadow-md border border-gray-300 hidden z-10"></ul>
-                        </div>
-                        <div class="mb-4">
-                            <label for="isbn" class="block text-gray-700 text-sm font-bold mb-2">ISBN:</label>
-                            <input type="text" id="isbn" name="isbn" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="ISBNを入力" autocomplete="off">
-                        </div>
-                        <div class="mb-4">
-                            <label for="publisher" class="block text-gray-700 text-sm font-bold mb-2">出版社:</label>
-                            <input type="text" id="publisher" name="publisher" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="出版社名" disabled>
-                        </div>
-                        
-                        <table class="min-w-full table-auto border-collapse border border-gray-300 mb-4">
-                            <thead>
-                                <tr class="border-b-4 border-double border-gray-300">
-                                    <th class="px-4 py-2 text-left border border-gray-300">倉庫/店舗</th>
-                                    <th class="px-4 py-2 text-left border border-gray-300">配送日数</th>
-                                    <th class="px-4 py-2 text-left border border-gray-300">コスト</th> <!-- 新しくコストの列を追加 -->
-                                    <th class="px-4 py-2 text-left border border-gray-300">選択</th>
-                                </tr>
-                            </thead>
-                            <tbody id="warehouse-days">
-                            </tbody>
-                        </table>
-                        
-                        <div class="flex justify-between items-center mt-6">
-                            <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">確定</button>
-                            <button type="button" class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400" onclick="location.href=quot;{{ url_for('main.home') }}quot;;">戻る</button>
-                        </div>
-                    </form>
-                </div>
+        <div class="flex justify-end mb-4">
+            <form method="get" class="flex items-center">
+                <label for="per_page" class="mr-2">1ページあたりの表示件数:</label>
+                <select name="per_page" id="per_page" onchange="this.form.submit()" class="border px-2 py-1 rounded">
+                    <option value="10" {% if per_page == 10 %}selected{% endif %}>10</option>
+                    <option value="50" {% if per_page == 50 %}selected{% endif %}>50</option>
+                    <option value="100" {% if per_page == 100 %}selected{% endif %}>100</option>
+                </select>
+            </form>
+        </div>
+
+        <table class="min-w-full table-auto border-collapse border border-gray-300 mb-4">
+            <thead>
+                <tr class="border-b-4 border-double border-gray-300">
+                    <th class="px-4 py-2 text-left border border-gray-300">Purchase ID</th>
+                    <th class="px-4 py-2 text-left border border-gray-300">Purchase Number</th>
+                    <th class="px-4 py-2 text-left border border-gray-300">ISBN</th>
+                    <th class="px-4 py-2 text-left border border-gray-300">Book Title</th>
+                    <th class="px-4 py-2 text-left border border-gray-300">Quantity</th>
+                    <th class="px-4 py-2 text-left border border-gray-300">Status</th>
+                    <th class="px-4 py-2 text-left border border-gray-300">Store Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for detail, purchase, store, book in details %}
+                    <tr>
+                        <td class="px-4 py-2 border border-gray-300">{{ detail.purchase_id }}</td>
+                        <td class="px-4 py-2 border border-gray-300">{{ detail.purchase_number }}</td>
+                        <td class="px-4 py-2 border border-gray-300">{{ detail.isbn }}</td>
+                        <td class="px-4 py-2 border border-gray-300">{{ book.title }}</td>
+                        <td class="px-4 py-2 border border-gray-300">{{ detail.quantity }}</td>
+                        <td class="px-4 py-2 border border-gray-300">{{ detail.status }}</td>
+                        <td class="px-4 py-2 border border-gray-300">{{ store.store_name }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="flex justify-between items-center">
+            <div>
+                {% if pagination.has_prev %}
+                    <a href="{{ url_for('main.order_progress', page=pagination.prev_num, per_page=per_page) }}" class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400">前へ</a>
+                {% endif %}
+            </div>
+            <div>
+                <span>ページ {{ pagination.page }} / {{ pagination.pages }}</span>
+            </div>
+            <div>
+                {% if pagination.has_next %}
+                    <a href="{{ url_for('main.order_progress', page=pagination.next_num, per_page=per_page) }}" class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400">次へ</a>
+                {% endif %}
             </div>
         </div>
     </div>
