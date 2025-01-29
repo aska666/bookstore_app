@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block page_title %}
+    レンタル画面
+{% endblock %}
+
+{% block content %}
+<div class="flex justify-center items-center">
+    <div class="bg-white w-4/5 rounded-lg shadow p-6 mb-6">
+        <div class="container mx-auto">
+            <div class="flex justify-center mb-6">
+                <div class="w-full max-w-md">
+                    <form method="post">
+                        <div class="mb-4">
+                            <label for="member-id" class="block text-gray-700 text-sm font-bold mb-2">会員コード:</label>
+                            <input type="text" id="member-id" name="member_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="会員コードを入力" autocomplete="off">
+                            <div id="member-info" class="mt-2 text-gray-700"></div>
+                        </div>
+                    
+                        <div class="mb-4">
+                            <label for="product-code" class="block text-gray-700 text-sm font-bold mb-2">商品コード:</label>
+                            <input type="text" id="product-code" name="product_code" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="商品コードを入力" autocomplete="off">
+                            <ul id="product-list" class="mt-2"></ul>
+                        </div>
+                    
+                        <div class="flex justify-between items-center mt-6">
+                            <button type="button" id="confirm-btn" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">確定</button>
+                            <button type="button" class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400" onclick="location.href=quot;{{ url_for('main.home') }}quot;;">戻る</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
