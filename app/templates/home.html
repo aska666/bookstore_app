@@ -1,77 +1,35 @@
 {% extends "base.html" %}
 
-{% block page_title %}
-    Home
-{% endblock %}
+{% block page_title %}ログイン{% endblock %}
 
 {% block content %}
 <div class="flex justify-center items-center">
-    <div class="bg-white w-4/5 rounded-lg shadow p-6 mb-6">
-
-        <h2 class="text-xl font-bold mb-4">通知</h2>
-        <div class="space-y-4">
-            <div class="flex justify-between items-center p-2 border rounded-lg">
-                <div class="flex items-center gap-4">
-                    <span class="px-3 py-1 w-20 text-white bg-yellow-500 rounded-full text-center text-xs">本部通知</span>
-                    <div>
-                        <p class="text-sm font-semibold text-gray-600">2025-01-28</p>
-                        <a href="#" class="text-lg font-bold text-blue-600 hover:text-blue-800">本日開始「Webシスフェア」のPOPに関して</a>
-                    </div>
-                </div>
+    <div class="bg-white w-2/5 rounded-lg shadow p-8">
+        <form method="POST" action="{{ url_for('main.login') }}" class="space-y-6">
+            <div class="flex justify-center">
+                <input 
+                    type="text" 
+                    name="employee_id" 
+                    class="w-4/5 bg-gray-100 rounded-lg p-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                    placeholder="店員ID" 
+                    required>
             </div>
-            <div class="flex justify-between items-center p-2 border rounded-lg">
-                <div class="flex items-center gap-4">
-                    <span class="px-3 py-1 w-20 text-white bg-blue-500 rounded-full text-center text-xs">引当依頼</span>
-                    <div>
-                        <p class="text-sm font-semibold text-gray-600">2025-01-25</p>
-                        <a href="#" class="text-lg font-bold text-blue-600 hover:text-blue-800">引当依頼があります</a>
-                    </div>
-                </div>
+            <div class="flex justify-center">
+                <input 
+                    type="password" 
+                    name="password" 
+                    class="w-4/5 bg-gray-100 rounded-lg p-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                    placeholder="パスワード" 
+                    required>
             </div>
-            <div class="flex justify-between items-center p-2 border rounded-lg">
-                <div class="flex items-center gap-4">
-                    <span class="px-3 py-1 w-20 text-white bg-red-500 rounded-full text-center text-xs">未確認</span>
-                    <div>
-                        <p class="text-sm font-semibold text-gray-600">2025-01-21</p>
-                        <a href="#" class="text-lg font-bold text-blue-600 hover:text-blue-800">未確認の注文があります</a>
-                    </div>
-                </div>
+            <div class="flex justify-center">
+                <button 
+                    type="submit" 
+                    class="w-4/5 bg-blue-400 text-white py-3 rounded-lg hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    ログイン
+                </button>
             </div>
-            <div class="flex justify-between items-center p-2 border rounded-lg">
-                <div class="flex items-center gap-4">
-                    <span class="px-3 py-1 w-20 text-white bg-blue-500 rounded-full text-center text-xs">引当依頼</span>
-                    <div>
-                        <p class="text-sm font-semibold text-gray-600">2025-01-21</p>
-                        <a href="#" class="text-lg font-bold text-blue-600 hover:text-blue-800">引当依頼があります</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-    </div>
-</div>
-
-<div class="flex justify-center items-center">
-    <div class="bg-white w-4/5 rounded-lg shadow p-6 mb-6">
-        <h2 class="text-xl font-bold mb-4">今日</h2>
-        <div class="flex justify-center items-center gap-48">
-
-            <div class="flex flex-col items-center">
-                <canvas id="salesChart" class="w-full max-w-[500px] h-60"></canvas>
-                <p class="mt-2 text-sm">売上 (本, CD, DVD, 文房具, その他)</p>
-            </div>
-
-            <div class="flex flex-col items-center justify-center">
-                <div class="flex flex-col items-center mb-6">
-                    <div class="text-3xl font-semibold mb-2">35</div>
-                    <p class="text-sm">レンタル数</p>
-                </div>
-                <div class="flex flex-col items-center">
-                    <div class="text-3xl font-semibold mb-2">5</div>
-                    <p class="text-sm">返却待ち数</p>
-                </div>
-            </div>
-        </div>
+        </form>
     </div>
 </div>
 {% endblock %}
