@@ -5,64 +5,68 @@
 {% endblock %}
 
 {% block content %}
-    <div class="flex justify-end mb-4">
-        <form method="get" class="flex items-center"></form>
-            <label for="per_page" class="mr-2">1ページあたりの件数:</label>
-            <select name="per_page" id="per_page" onchange="this.form.submit()" class="border px-2 py-1 rounded">
-                <option value="10" {% if page_size == 10 %}selected{% endif %}>10</option>
-                <option value="50" {% if page_size == 50 %}selected{% endif %}>50</option>
-                <option value="100" {% if page_size == 100 %}selected{% endif %}>100</option>
-            </select>
-        </form>
-    </div>
+<div class="flex justify-center items-center">
+    <div class="bg-white w-full rounded-lg shadow p-6 mb-6">
+        <div class="flex justify-end mb-4">
+            <form method="get" class="flex items-center"></form>
+                <label for="per_page" class="mr-2">1ページあたりの件数:</label>
+                <select name="per_page" id="per_page" onchange="this.form.submit()" class="border px-2 py-1 rounded">
+                    <option value="10" {% if page_size == 10 %}selected{% endif %}>10</option>
+                    <option value="50" {% if page_size == 50 %}selected{% endif %}>50</option>
+                    <option value="100" {% if page_size == 100 %}selected{% endif %}>100</option>
+                </select>
+            </form>
+        </div>
 
-    <table class="min-w-full table-auto border-collapse border border-gray-300 mb-4">
-        <thead>
-            <tr class="border-b-4 border-double border-gray-300">
-                <th class="px-4 py-2 text-left border border-gray-300">Order ID</th>
-                <th class="px-4 py-2 text-left border border-gray-300"> Number</th>
-                <th class="px-4 py-2 text-left border border-gray-300">ISBN</th>
-                <th class="px-4 py-2 text-left border border-gray-300">書籍名</th>
-                <th class="px-4 py-2 text-left border border-gray-300">数量</th>
-                <th class="px-4 py-2 text-left border border-gray-300">店舗名</th>
-                <th class="px-4 py-2 text-left border border-gray-300">操作</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for order, detail, book, store in details %}
-            <tr>
-                <td class="px-4 py-2 border border-gray-300">{{ detail.order_id }}</td>
-                <td class="px-4 py-2 border border-gray-300">{{ detail.order_number }}</td>
-                <td class="px-4 py-2 border border-gray-300">{{ detail.isbn }}</td>
-                <td class="px-4 py-2 border border-gray-300">{{ book.title }}</td>
-                <td class="px-4 py-2 border border-gray-300">{{ detail.quantity }}</td>
-                <td class="px-4 py-2 border border-gray-300">{{ store.store_name }}</td>
-                <td class="px-4 py-2 border border-gray-300">
-                    <button class="bg-blue-500 text-white px-3 py-1 rounded" onclick="updateStatus('{{ detail.order_id }}', '{{ detail.order_number }}')">
-                        引当完了
-                    </button>
-                    <button class="bg-green-500 text-white px-3 py-1 rounded" onclick="addToTemp('{{ detail.order_id }}', '{{ detail.order_number }}')">
-                        発注追加
-                    </button>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+        <table class="min-w-full table-auto border-collapse border border-gray-300 mb-4">
+            <thead>
+                <tr class="border-b-4 border-double border-gray-300">
+                    <th class="px-4 py-2 text-left border border-gray-300">Order ID</th>
+                    <th class="px-4 py-2 text-left border border-gray-300"> Number</th>
+                    <th class="px-4 py-2 text-left border border-gray-300">ISBN</th>
+                    <th class="px-4 py-2 text-left border border-gray-300">書籍名</th>
+                    <th class="px-4 py-2 text-left border border-gray-300">数量</th>
+                    <th class="px-4 py-2 text-left border border-gray-300">店舗名</th>
+                    <th class="px-4 py-2 text-left border border-gray-300">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order, detail, book, store in details %}
+                <tr>
+                    <td class="px-4 py-2 border border-gray-300">{{ detail.order_id }}</td>
+                    <td class="px-4 py-2 border border-gray-300">{{ detail.order_number }}</td>
+                    <td class="px-4 py-2 border border-gray-300">{{ detail.isbn }}</td>
+                    <td class="px-4 py-2 border border-gray-300">{{ book.title }}</td>
+                    <td class="px-4 py-2 border border-gray-300">{{ detail.quantity }}</td>
+                    <td class="px-4 py-2 border border-gray-300">{{ store.store_name }}</td>
+                    <td class="px-4 py-2 border border-gray-300">
+                        <button class="bg-blue-500 text-white px-3 py-1 rounded" onclick="updateStatus('{{ detail.order_id }}', '{{ detail.order_number }}')">
+                            引当完了
+                        </button>
+                        <button class="bg-green-500 text-white px-3 py-1 rounded" onclick="addToTemp('{{ detail.order_id }}', '{{ detail.order_number }}')">
+                            発注追加
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
 
-    <div class="flex justify-between items-center">
-        <div>
-            {% if pagination.has_prev %}
-                <a href="{{ url_for('order_requests.order_requests', page=pagination.prev_num, per_page=per_page) }}" class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400">前へ</a>
-            {% endif %}
-        </div>
-        <div>
-            <span>ページ {{ pagination.page }} / {{ pagination.pages }}</span>
-        </div>
-        <div>
-            {% if pagination.has_next %}
-                <a href="{{ url_for('order_requests.order_requests', page=pagination.next_num, per_page=per_page) }}" class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400">次へ</a>
-            {% endif %}
+        <div class="flex justify-between items-center">
+            <div>
+                {% if pagination.has_prev %}
+                    <a href="{{ url_for('main.order_requests', page=pagination.prev_num, per_page=per_page) }}" class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400">前へ</a>
+                {% endif %}
+            </div>
+            <div>
+                <span>ページ {{ pagination.page }} / {{ pagination.pages }}</span>
+            </div>
+            <div>
+                {% if pagination.has_next %}
+                    <a href="{{ url_for('main.order_requests', page=pagination.next_num, per_page=per_page) }}" class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400">次へ</a>
+                {% endif %}
+            </div>
         </div>
     </div>
+</div>
 {% endblock %}
