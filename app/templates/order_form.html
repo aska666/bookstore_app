@@ -1,35 +1,50 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 
 {% block page_title %}
     発注画面
 {% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="login-form">
-        <div class="form-group">
-            <input type="text" id="book-name" class="form-control" placeholder="書籍名" autocomplete="off">
-            <ul id="book-list" class="book-list"></ul>
-        </div>
-        <div class="form-group">
-            <input type="text" id="isbn" class="form-control" placeholder="ISBN" autocomplete="off">
-        </div>
-        <div class="form-group">
-            <input type="text" id="publisher" class="form-control" placeholder="出版社" disabled>
-        </div>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>倉庫/店舗</th>
-                    <th>配送日数</th>
-                    <th>選択</th>
-                </tr>
-            </thead>
-            <tbody id="warehouse-days"></tbody>
-        </table>
-        <div class="form-group" style="margin-top: 1rem;">
-            <button class="btn" id="confirm-btn">確定</button>
-            <button class="btn btn-secondary back-btn" onclick="location.href='{{ url_for('main.home') }}'">戻る</button>
+<div class="flex justify-center items-center">
+    <div class="bg-white w-full rounded-lg shadow p-6 mb-6">
+        <div class="container mx-auto">
+            <div class="flex justify-center mb-6">
+                <div class="w-full max-w-md">
+                    <form method="post">
+                        <div class="mb-4">
+                            <label for="book-name" class="block text-gray-700 text-sm font-bold mb-2">書籍名:</label>
+                            <input type="text" id="book-name" name="book_name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="書籍名を入力" autocomplete="off">
+                            <ul id="book-list" class="book-list mt-2 absolute w-full px-3 bg-white shadow-md border border-gray-300 hidden z-10"></ul>
+                        </div>
+                        <div class="mb-4">
+                            <label for="isbn" class="block text-gray-700 text-sm font-bold mb-2">ISBN:</label>
+                            <input type="text" id="isbn" name="isbn" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="ISBNを入力" autocomplete="off">
+                        </div>
+                        <div class="mb-4">
+                            <label for="publisher" class="block text-gray-700 text-sm font-bold mb-2">出版社:</label>
+                            <input type="text" id="publisher" name="publisher" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="出版社名" disabled>
+                        </div>
+                        
+                        <table class="min-w-full table-auto border-collapse border border-gray-300 mb-4">
+                            <thead>
+                                <tr class="border-b-4 border-double border-gray-300">
+                                    <th class="px-4 py-2 text-left border border-gray-300">倉庫/店舗</th>
+                                    <th class="px-4 py-2 text-left border border-gray-300">配送日数</th>
+                                    <th class="px-4 py-2 text-left border border-gray-300">コスト</th> <!-- 新しくコストの列を追加 -->
+                                    <th class="px-4 py-2 text-left border border-gray-300">選択</th>
+                                </tr>
+                            </thead>
+                            <tbody id="warehouse-days">
+                            </tbody>
+                        </table>
+                        
+                        <div class="flex justify-between items-center mt-6">
+                            <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">確定</button>
+                            <button type="button" class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400" onclick="location.href=quot;{{ url_for('main.home') }}quot;;">戻る</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 </div>
