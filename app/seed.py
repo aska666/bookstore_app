@@ -1,5 +1,5 @@
 from .database import db
-from datetime import date
+from datetime import date, timedelta
 from app.models import (
     Member,
     Book,
@@ -10,6 +10,7 @@ from app.models import (
     Purchase,
     PurchaseDetail,
 )
+import random
 
 
 def reset_database():
@@ -17,132 +18,238 @@ def reset_database():
     db.create_all()
 
 
+def generate_unique_email(last_name: str):
+    while True:
+        # ランダムにemailを生成
+        email = (
+            f"{random.choice(last_name).lower()}{random.randint(1, 999)}@example.com"
+        )
+
+        existing_member = Member.query.filter_by(email=email).first()
+        if not existing_member:
+            return email
+
+
 def create_sample_members():
-    member1 = Member(
-        name="山田太郎",
-        name_kana="ヤマダタロウ",
-        date_of_birth=date(1990, 5, 1),
-        phone_number="09012345678",
-        email="yamada@example.com",
-        registration_date=date(2025, 1, 1),
-    )
-    member2 = Member(
-        name="佐藤花子",
-        name_kana="サトウハナコ",
-        date_of_birth=date(1985, 6, 15),
-        phone_number="09023456789",
-        email="sato@example.com",
-        registration_date=date(2025, 1, 1),
-    )
-    db.session.add_all([member1, member2])
+    members = []
+    first_names = [
+        "太郎",
+        "花子",
+        "一郎",
+        "美咲",
+        "健一",
+        "幸子",
+        "翔太",
+        "香織",
+        "剛",
+        "舞",
+    ]
+    last_names = [
+        "山田",
+        "佐藤",
+        "鈴木",
+        "田中",
+        "高橋",
+        "渡辺",
+        "伊藤",
+        "中村",
+        "小林",
+        "加藤",
+    ]
+
+    for i in range(50):
+        first_name = random.choice(first_names)
+        last_name = random.choice(last_names)
+        birth_year = random.randint(1970, 2000)
+        birth_month = random.randint(1, 12)
+        birth_day = random.randint(1, 28)
+
+        member = Member(
+            name=f"{last_name}{first_name}",
+            name_kana=f"{last_name}{first_name}".upper(),
+            date_of_birth=date(birth_year, birth_month, birth_day),
+            phone_number=f"0{random.randint(90, 99)}{random.randint(1000, 9999)}{random.randint(1000, 9999)}",
+            email=generate_unique_email(last_name),
+            registration_date=date(2025, 1, 1) - timedelta(days=random.randint(0, 365)),
+        )
+        members.append(member)
+
+    db.session.add_all(members)
 
 
 def create_sample_books():
-    book1 = Book(
-        isbn="978-1234567890",
-        title="Python入門",
-        genre="プログラミング",
-        publisher="技術評論社",
-        publication_date=date(2025, 1, 1),
-        pages=300,
-        size="A5",
-        series=None,
-        retail_price=3000,
-    )
-    book2 = Book(
-        isbn="978-0987654321",
-        title="Flaskの使い方",
-        genre="プログラミング",
-        publisher="技術評論社",
-        publication_date=date(2025, 1, 1),
-        pages=250,
-        size="A5",
-        series=None,
-        retail_price=2500,
-    )
-    db.session.add_all([book1, book2])
+    books = []
+    genres = [
+        "プログラミング",
+        "ビジネス",
+        "文学",
+        "科学",
+        "歴史",
+        "芸術",
+        "自己啓発",
+        "料理",
+        "旅行",
+        "教育",
+    ]
+    publishers = [
+        "技術評論社",
+        "翔泳社",
+        "秀和システム",
+        "オライリー・ジャパン",
+        "日経BP",
+    ]
+    titles = [
+        "Python実践入門",
+        "データ分析の基礎",
+        "機械学習入門",
+        "Webアプリケーション開発",
+        "経営戦略",
+        "マーケティング入門",
+        "プロジェクト管理",
+        "チームビルディング",
+        "日本の歴史",
+        "世界の文学",
+        "科学の謎",
+        "現代アート入門",
+        "成功への道",
+        "おいしい料理の作り方",
+        "世界遺産巡り",
+        "効果的な学習法",
+    ]
+
+    for i in range(50):
+        isbn = f"978-{random.randint(1000000000, 9999999999)}"
+        book = Book(
+            isbn=isbn,
+            title=f"{random.choice(titles)} Vol.{i + 1}",
+            genre=random.choice(genres),
+            publisher=random.choice(publishers),
+            publication_date=date(2025, 1, 1) - timedelta(days=random.randint(0, 1825)),
+            pages=random.randint(200, 800),
+            size=random.choice(["A4", "A5", "B5"]),
+            series=None,
+            retail_price=random.randint(1000, 5000),
+        )
+        books.append(book)
+
+    db.session.add_all(books)
 
 
 def create_sample_stores():
-    store1 = Store(store_id=1, store_name="オンラインショップ")
-    store2 = Store(store_id=2, store_name="書店ABC")
-    db.session.add_all([store1, store2])
+    stores = []
+    store_names = [
+        "オンラインショップ",
+        "書店ABC",
+        "ブックストアX",
+        "本の森",
+        "知識の泉",
+        "未来書店",
+        "駅前ブックス",
+        "学園書店",
+        "専門書店Y",
+        "総合書店Z",
+    ]
+
+    for i in range(10):
+        store = Store(store_id=i + 1, store_name=store_names[i])
+        stores.append(store)
+
+    db.session.add_all(stores)
 
 
 def create_sample_orders():
-    order1 = Order(
-        order_date=date(2025, 1, 1),
-        total_amount=5500,
-        payment_method="クレジットカード",
-        store_id=1,
-        member_id=1,
-    )
-    db.session.add(order1)
+    orders = []
+    payment_methods = ["クレジットカード", "現金", "電子マネー", "代金引換"]
+
+    for i in range(50):
+        order = Order(
+            order_date=date(2025, 1, 1) - timedelta(days=random.randint(0, 365)),
+            total_amount=random.randint(1000, 50000),
+            payment_method=random.choice(payment_methods),
+            store_id=random.randint(1, 10),
+            member_id=random.randint(1, 50),
+        )
+        orders.append(order)
+
+    db.session.add_all(orders)
 
 
 def create_sample_order_details():
-    order_detail1 = OrderDetail(
-        order_id=1, order_number=1, quantity=1, isbn="978-1234567890", status="検品中"
-    )
-    order_detail2 = OrderDetail(
-        order_id=1, order_number=2, quantity=1, isbn="978-0987654321", status="検品中"
-    )
-    db.session.add_all([order_detail1, order_detail2])
+    order_details = []
+    statuses = ["検品中", "発送準備中", "発送済み", "配達完了"]
+
+    for order_id in range(1, 51):
+        num_items = random.randint(1, 3)
+        for j in range(num_items):
+            books = Book.query.all()
+            order_detail = OrderDetail(
+                order_id=order_id,
+                order_number=j + 1,
+                quantity=random.randint(1, 3),
+                isbn=random.choice(books).isbn,
+                status=random.choice(statuses),
+            )
+            order_details.append(order_detail)
+
+    db.session.add_all(order_details)
 
 
 def create_sample_purchases():
-    purchase1 = Purchase(
-        store_id=1,
-        purchase_date=date(2025, 1, 1),
-        supplier="Supplier A",
-        total_amount=10000,
-    )
-    purchase2 = Purchase(
-        store_id=2,
-        purchase_date=date(2025, 1, 2),
-        supplier="Supplier B",
-        total_amount=8000,
-    )
-    db.session.add_all([purchase1, purchase2])
+    purchases = []
+    suppliers = ["Supplier A", "Supplier B", "Supplier C", "Supplier D", "Supplier E"]
+
+    for i in range(50):
+        purchase = Purchase(
+            store_id=random.randint(1, 10),
+            purchase_date=date(2025, 1, 1) - timedelta(days=random.randint(0, 365)),
+            supplier=random.choice(suppliers),
+            total_amount=random.randint(50000, 500000),
+        )
+        purchases.append(purchase)
+
+    db.session.add_all(purchases)
 
 
 def create_sample_purchase_details():
-    purchase_detail1 = PurchaseDetail(
-        purchase_id=1,
-        purchase_number=1,
-        isbn="978-1234567890",
-        quantity=5,
-        status="配送中",
-    )
-    purchase_detail2 = PurchaseDetail(
-        purchase_id=1,
-        purchase_number=2,
-        isbn="978-0987654321",
-        quantity=3,
-        status="検品中",
-    )
-    purchase_detail3 = PurchaseDetail(
-        purchase_id=2,
-        purchase_number=1,
-        isbn="978-1234567890",
-        quantity=10,
-        status="配送中",
-    )
-    db.session.add_all([purchase_detail1, purchase_detail2, purchase_detail3])
+    purchase_details = []
+    statuses = ["発注中", "配送中", "検品中", "完了"]
+
+    for purchase_id in range(1, 51):
+        num_items = random.randint(1, 5)
+        for j in range(num_items):
+            books = Book.query.all()
+            purchase_detail = PurchaseDetail(
+                purchase_id=purchase_id,
+                purchase_number=j + 1,
+                isbn=random.choice(books).isbn,
+                quantity=random.randint(5, 50),
+                status=random.choice(statuses),
+            )
+            purchase_details.append(purchase_detail)
+
+    db.session.add_all(purchase_details)
 
 
 def create_sample_inventories():
-    inventory1 = Inventory(store_id=1, isbn="978-1234567890", quantity=50)
-    inventory2 = Inventory(store_id=1, isbn="978-0987654321", quantity=30)
-    inventory3 = Inventory(store_id=2, isbn="978-1234567890", quantity=20)
-    inventory4 = Inventory(store_id=2, isbn="978-0987654321", quantity=10)
-    db.session.add_all([inventory1, inventory2, inventory3, inventory4])
+    inventories = []
+    books = Book.query.all()
+    stores = Store.query.all()
+
+    for store in stores:
+        for book in books:
+            inventory = Inventory(
+                store_id=store.store_id, isbn=book.isbn, quantity=random.randint(0, 100)
+            )
+            inventories.append(inventory)
+
+    db.session.add_all(inventories)
 
 
 def initialize_data():
     create_sample_members()
     create_sample_books()
     create_sample_stores()
+
     create_sample_orders()
     create_sample_order_details()
     create_sample_purchases()
