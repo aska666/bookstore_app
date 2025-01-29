@@ -1,5 +1,6 @@
 from sqlalchemy import Enum
 from .database import db
+from datetime import datetime
 
 ORDER_STATUS = Enum("配送中", "検品中", name="status_enum")
 
@@ -13,7 +14,11 @@ class Member(db.Model):
     phone_number = db.Column(db.String, nullable=False)
     email = db.Column(db.String, nullable=False, unique=True)
     registration_date = db.Column(db.Date, nullable=False)
+    points = db.Column(db.Integer, default=0)
+    qr_code = db.Column(db.String, nullable=True)
 
+    reservations = db.relationship("Reservation", backref="member", lazy=True)
+    borrow_histories = db.relationship("BorrowHistory", backref="member", lazy=True)
     orders = db.relationship("Order", backref="member", lazy=True)
 
 
@@ -92,3 +97,42 @@ class PurchaseDetail(db.Model):
     quantity = db.Column(db.Integer, nullable=False)
     isbn = db.Column(db.String, db.ForeignKey("books.isbn"), nullable=False)
     status = db.Column(db.String, nullable=False)
+
+
+class RentalItem(db.Model):
+    __tablename__ = "rental_items"
+    item_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    product_id = db.Column(db.String, nullable=False)
+    available = db.Column(db.Boolean, nullable=False)
+
+    reservations = db.relationship("Reservation", backref="rental_item", lazy=True)
+    borrow_histories = db.relationship(
+        "BorrowHistory", backref="rental_item", lazy=True
+    )
+
+
+class Reservation(db.Model):
+    __tablename__ = "reservations"
+    reservation_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    member_id = db.Column(
+        db.Integer, db.ForeignKey("members.member_id"), nullable=False
+    )
+    item_id = db.Column(
+        db.Integer, db.ForeignKey("rental_items.item_id"), nullable=False
+    )
+    status = db.Column(db.Boolean, nullable=False)
+    reservation_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+
+
+class BorrowHistory(db.Model):
+    __tablename__ = "borrow_histories"
+    borrow_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    member_id = db.Column(
+        db.Integer, db.ForeignKey("members.member_id"), nullable=False
+    )
+    item_id = db.Column(
+        db.Integer, db.ForeignKey("rental_items.item_id"), nullable=False
+    )
+    status = db.Column(db.Boolean, nullable=False)
+    borrow_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    return_date = db.Column(db.DateTime, nullable=True)
