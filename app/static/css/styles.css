@@ -5,3 +5,9 @@
 .sidebar.closed {
     transform: translateX(-100%);
 }
+
+.book-list {
+    width: 28rem;
+}
+
+
