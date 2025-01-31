@@ -3,13 +3,33 @@
 {% block page_title %}ログイン{% endblock %}
 
 {% block content %}
-<form class="login-form" method="POST" action="{{ url_for('main.login') }}">
-    <div class="form-group">
-        <input type="text" name="employee_id" class="form-control" placeholder="店員ID" required>
+<div class="flex justify-center items-center">
+    <div class="bg-white w-2/5 rounded-lg shadow p-8">
+        <form method="POST" action="{{ url_for('main.login') }}" class="space-y-6">
+            <div class="flex justify-center">
+                <input 
+                    type="text" 
+                    name="employee_id" 
+                    class="w-4/5 bg-gray-100 rounded-lg p-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                    placeholder="店員ID" 
+                    required>
+            </div>
+            <div class="flex justify-center">
+                <input 
+                    type="password" 
+                    name="password" 
+                    class="w-4/5 bg-gray-100 rounded-lg p-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                    placeholder="パスワード" 
+                    required>
+            </div>
+            <div class="flex justify-center">
+                <button 
+                    type="submit" 
+                    class="w-4/5 bg-blue-400 text-white py-3 rounded-lg hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    ログイン
+                </button>
+            </div>
+        </form>
     </div>
-    <div class="form-group">
-        <input type="password" name="password" class="form-control" placeholder="パスワード" required>
-    </div>
-    <button type="submit" class="btn login-btn">ログイン</button>
-</form>
+</div>
 {% endblock %}
