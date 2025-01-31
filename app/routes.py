@@ -13,6 +13,9 @@ from .models import (
     Purchase,
     OrderDetail,
     Order,
+    ReservationDetail,
+    Reservation,
+    DVD,
 )
 from .database import db
 from sqlalchemy.orm import joinedload
@@ -57,7 +60,7 @@ def order_progress():
         .select_from(PurchaseDetail)
         .join(Purchase, PurchaseDetail.purchase_id == Purchase.purchase_id)
         .join(Store, Purchase.store_id == Store.store_id)
-        .join(Book, PurchaseDetail.isbn == Book.isbn)
+        .join(Book, PurchaseDetail.jan_code == Book.jan_code)
         .order_by(PurchaseDetail.purchase_id, PurchaseDetail.purchase_number)
         .paginate(page=page, per_page=per_page, error_out=False)
     )
@@ -80,7 +83,7 @@ def order_requests():
     query = (
         db.session.query(Order, OrderDetail, Book, Store)
         .join(OrderDetail, Order.order_id == OrderDetail.order_id)
-        .join(Book, OrderDetail.isbn == Book.isbn)
+        .join(Book, OrderDetail.jan_code == Book.jan_code)
         .join(Store, Order.store_id == Store.store_id)
         .filter(OrderDetail.status == "検品中")
         .options(joinedload(OrderDetail.order))
@@ -101,3 +104,30 @@ def order_requests():
 @main.route("/rental", methods=["POST", "GET"])
 def rental():
     return render_template("rental.html")
+
+
+@main.route("/reservation-list", methods=["POST", "GET"])
+def reservation_list():
+    page = request.args.get("page", 1, type=int)
+    per_page = request.args.get("per_page", 10, type=int)
+
+    query = (
+        db.session.query(ReservationDetail, Reservation, Store, DVD)
+        .select_from(ReservationDetail)
+        .join(
+            Reservation, ReservationDetail.reservation_id == Reservation.reservation_id
+        )
+        .join(Store, Reservation.store_id == Store.store_id)
+        .join(DVD, ReservationDetail.jan_code == DVD.jan_code)
+        .order_by(ReservationDetail.reservation_id, Reservation.member_id)
+        .paginate(page=page, per_page=per_page, error_out=False)
+    )
+
+    details = query.items
+
+    return render_template(
+        "reservation_list.html",
+        details=details,
+        pagination=query,
+        per_page=per_page,
+    )
